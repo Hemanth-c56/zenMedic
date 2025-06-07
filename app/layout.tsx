@@ -1,21 +1,25 @@
-import type React from "react"
-import "./globals.css"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import { ThemeProvider } from "@/components/theme-provider"
+import type React from "react";
+import "./globals.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "MediChat - Your AI Medical Assistant",
-  description: "Get instant answers to your medical questions with our AI-powered medical chatbot.",
-    generator: 'v0.dev'
-}
+  description:
+    "Get instant answers to your medical questions with our AI-powered medical chatbot.",
+  icons: {
+    icon: "/pharmacy.ico",
+  },
+  generator: "v0.dev",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -25,5 +29,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
