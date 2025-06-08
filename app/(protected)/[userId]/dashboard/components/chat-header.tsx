@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { RefreshCw, Menu, Sparkles, User } from "lucide-react";
+import { RefreshCw, Menu, Sparkles, User, BadgeInfo } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -69,6 +69,30 @@ export default function ChatHeader({ onNewChat }: ChatHeaderProps) {
                   >
                     <RefreshCw className="mr-3 h-5 w-5" />
                     New Chat
+                  </Button>
+                </div>
+                <div className="px-2">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start mb-4 bg-white/80 backdrop-blur-sm"
+                    onClick={() => {
+                      router.push(`/${userId}/profile`);
+                    }}
+                  >
+                    <User className="mr-3 h-5 w-5" />
+                    Profile
+                  </Button>
+                </div>
+                <div className="px-2">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start mb-4 bg-white/80 backdrop-blur-sm"
+                    onClick={() => {
+                      router.push(`/${userId}/about`);
+                    }}
+                  >
+                    <BadgeInfo className="mr-3 h-5 w-5" />
+                    About
                   </Button>
                 </div>
                 <div className="mt-auto px-2">

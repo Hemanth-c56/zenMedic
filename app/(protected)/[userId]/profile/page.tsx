@@ -175,7 +175,7 @@ export default function ProfilePage() {
               </motion.div>
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
-              MediChat Profile
+              Profile
             </h1>
           </div>
         </div>

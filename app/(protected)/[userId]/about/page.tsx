@@ -117,9 +117,9 @@ export default function AboutPage() {
     },
     {
       icon: <Heart className="h-8 w-8" />,
-      title: "Health Monitoring",
+      title: "Fully Trained",
       description:
-        "Continuous health tracking and personalized wellness recommendations",
+        "ZenMedic is trained on medical documents, ensuring accurate and reliable information",
       color: "from-red-400 to-red-600",
     },
     {
@@ -223,38 +223,12 @@ export default function AboutPage() {
           color: "bg-green-500",
         },
         {
-          name: "Mongoose",
-          description: "MongoDB object modeling",
-          color: "bg-red-600",
-        },
-      ],
-    },
-    {
-      category: "AI & ML",
-      icon: <Cpu className="h-8 w-8" />,
-      technologies: [
-        {
           name: "Mistral AI",
           description: "Advanced language model",
           color: "bg-orange-500",
         },
-        {
-          name: "OpenAI API",
-          description: "GPT integration",
-          color: "bg-emerald-600",
-        },
-        {
-          name: "LangChain",
-          description: "AI application framework",
-          color: "bg-purple-600",
-        },
-        {
-          name: "Vector DB",
-          description: "Semantic search",
-          color: "bg-indigo-600",
-        },
       ],
-    },
+    }
   ];
 
   const frontendFeatures = [
@@ -290,9 +264,9 @@ export default function AboutPage() {
     },
     {
       icon: <Globe className="h-6 w-6" />,
-      title: "Progressive Web App",
+      title: "Robust Backend",
       description:
-        "Offline capabilities, push notifications, and native app-like experience",
+        "Scalable Node.js backend with secure API endpoints and real-time data processing",
     },
   ];
 
@@ -338,7 +312,7 @@ export default function AboutPage() {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 w-full py-6 px-4 flex items-center justify-between">
+      <header className="relative z-10 w-full py-4 px-4 flex items-center justify-between">
         <div className="flex items-center">
           <Button
             variant="ghost"
@@ -364,14 +338,14 @@ export default function AboutPage() {
               </motion.div>
             </div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
-              About MediChat
+              About ZenMedic
             </h1>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section ref={heroRef} className="relative z-10 py-20 px-4">
+      <section ref={heroRef} className="relative z-10 py-10 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -401,7 +375,7 @@ export default function AboutPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              What Makes MediChat{" "}
+              What Makes ZenMedic{" "}
               <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
                 Special
               </span>
@@ -450,7 +424,7 @@ export default function AboutPage() {
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Who Benefits from{" "}
               <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
-                MediChat
+                ZenMedic
               </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -575,14 +549,14 @@ export default function AboutPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Frontend{" "}
+              ZenMedic{" "}
               <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
                 Excellence
               </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Meticulously crafted user interface that combines beauty with
-              functionality for the ultimate healthcare experience
+              robust backend functionality for the ultimate healthcare experience
             </p>
           </motion.div>
 
@@ -607,34 +581,6 @@ export default function AboutPage() {
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="relative z-10 py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={isFrontendInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
-            className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-3xl p-12 shadow-2xl text-white"
-          >
-            <Rocket className="h-16 w-16 mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to Experience the Future of Healthcare?
-            </h2>
-            <p className="text-xl mb-8 opacity-90">
-              Join thousands of healthcare professionals and patients who trust
-              MediChat for their medical needs
-            </p>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-3 bg-white text-cyan-600 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg"
-            >
-              Start Chatting Now
-              <ChevronRight className="h-5 w-5" />
-            </Link>
-          </motion.div>
         </div>
       </section>
     </div>
