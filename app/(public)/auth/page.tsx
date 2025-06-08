@@ -208,7 +208,7 @@ export default function AuthPage() {
             </motion.div>
           </div>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
-            MediChat
+            ZenMedic
           </h1>
         </div>
       </header>
@@ -386,7 +386,7 @@ export default function AuthPage() {
                     )}
 
                     {/* Forgot Password Link - Only for Login */}
-                    {isLogin && (
+{/*                     {isLogin && (
                       <div className="flex justify-end">
                         <Link
                           href="/forgot-password"
@@ -395,7 +395,7 @@ export default function AuthPage() {
                           Forgot password?
                         </Link>
                       </div>
-                    )}
+                    )} */}
 
                     {/* Submit Button */}
                     <Button
@@ -433,7 +433,7 @@ export default function AuthPage() {
 
           {/* Medical Disclaimer */}
           <p className="text-xs text-center text-gray-500 mt-8">
-            MediChat provides secure access to medical professionals and
+            ZenMedic provides secure access to medical professionals and
             information.
             <br />
             Your data is encrypted and protected in accordance with healthcare
