@@ -9,7 +9,7 @@ import axios from "axios";
 async function runMistral(apiKey: string, prompt: string): Promise<string> {
   try {
     const response = await axios.post(
-      process.env.MISTRAL_API_URL || "https://mistral.api",
+      `${process.env.NEXT_PUBLIC_MISTRAL_API_URL}` || "https://mistral.api",
       {
         model: "mistral-tiny", // or mistral-small, mistral-medium
         messages: [{ role: "user", content: prompt }],
@@ -30,7 +30,7 @@ async function runMistral(apiKey: string, prompt: string): Promise<string> {
       status: error?.response?.status,
       data: error?.response?.data,
     });
-    return "Sorry, something went wrong while getting a response from Mistral.";
+    return `Sorry, something went wrong while getting a response from Mistral. ${error}`;
   }
 }
 

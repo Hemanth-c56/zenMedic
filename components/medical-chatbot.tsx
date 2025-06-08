@@ -28,7 +28,7 @@ export default function MedicalChatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const apiKey = process.env.MISTRAL_API_KEY || "";
+  const apiKey = process.env.NEXT_PUBLIC_MISTRAL_API_KEY || "";
 
   useEffect(() => {
     scrollToBottom();
@@ -58,9 +58,10 @@ export default function MedicalChatbot() {
     setIsLoading(true);
 
     try {
-      console.log("Sending message to Mistral:", input, apiKey);
-      let prompt = `You are an expert in medical assistance. Answer the user's questions based on the provided input:\n\nUser: ${input}\nAssistant:`;
-      const response = await run(apiKey, input);
+      // console.log("Sending message to Mistral:", input, apiKey);
+      let prompt = `You are an expert in medical assistance.You can answer the user with symptoms, health tips just like a expert doctor and also suggest with medicines. Answer the user's questions based on the provided input:\n\nUser: ${input}\nAssistant:`;
+      const response = await run(apiKey, prompt);
+      // console.log("Received response from Mistral:", response);
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
