@@ -1,130 +1,155 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Sparkles, Mail, Lock, User, ArrowRight, Heart, Stethoscope, Activity } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import {
+  Sparkles,
+  Mail,
+  Lock,
+  User,
+  ArrowRight,
+  Heart,
+  Stethoscope,
+  Activity,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import axios from "axios";
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-  })
+  });
   const [errors, setErrors] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-  })
-  const router = useRouter()
+  });
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     // Clear error when user starts typing
     if (errors[name as keyof typeof errors]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }))
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
-  }
+  };
 
   const validateForm = () => {
-    let isValid = true
-    const newErrors = { ...errors }
+    let isValid = true;
+    const newErrors = { ...errors };
 
     // Reset errors
     Object.keys(newErrors).forEach((key) => {
-      newErrors[key as keyof typeof errors] = ""
-    })
+      newErrors[key as keyof typeof errors] = "";
+    });
 
     // Email validation
     if (!formData.email) {
-      newErrors.email = "Email is required"
-      isValid = false
+      newErrors.email = "Email is required";
+      isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid"
-      isValid = false
+      newErrors.email = "Email is invalid";
+      isValid = false;
     }
 
     // Password validation
     if (!formData.password) {
-      newErrors.password = "Password is required"
-      isValid = false
+      newErrors.password = "Password is required";
+      isValid = false;
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters"
-      isValid = false
+      newErrors.password = "Password must be at least 6 characters";
+      isValid = false;
     }
 
     // Additional validations for signup
     if (!isLogin) {
       if (!formData.name) {
-        newErrors.name = "Name is required"
-        isValid = false
+        newErrors.name = "Name is required";
+        isValid = false;
       }
 
       if (!formData.confirmPassword) {
-        newErrors.confirmPassword = "Please confirm your password"
-        isValid = false
+        newErrors.confirmPassword = "Please confirm your password";
+        isValid = false;
       } else if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = "Passwords do not match"
-        isValid = false
+        newErrors.confirmPassword = "Passwords do not match";
+        isValid = false;
       }
     }
 
-    setErrors(newErrors)
-    return isValid
-  }
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
-      // Here you would normally make an API call
-      // This is where you can determine if it's login or signup
-      const actionType = isLogin ? "login" : "signup"
+      const actionType = isLogin ? "login" : "signup";
 
       console.log(`Performing ${actionType} with:`, {
         ...formData,
         actionType,
-      })
+      });
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      if (actionType === "login") {
+        const res = await axios.post(
+          `https://zengpt-api.vercel.app/api/users/zengpt/login`,
+          {
+            email: formData.email,
+            password: formData.password,
+          }
+        );
 
-      // Redirect to dashboard or home page after successful auth
-      router.push("/")
+        router.push(`${res.data.userId}/dashboard`);
+      } else {
+        const res = await axios.post(
+          `https://zengpt-api.vercel.app/api/users/zengpt/signup`,
+          {
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+          }
+        );
+
+        router.push(`${res.data.userId}/dashboard`);
+      }
     } catch (error) {
-      console.error("Authentication error:", error)
+      console.error("Authentication error:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const toggleAuthMode = () => {
-    setIsLogin(!isLogin)
+    setIsLogin(!isLogin);
     // Clear errors when switching modes
     setErrors({
       name: "",
       email: "",
       password: "",
       confirmPassword: "",
-    })
-  }
+    });
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-cyan-50 via-blue-50 to-teal-50 relative overflow-hidden">
@@ -134,10 +159,13 @@ export default function AuthPage() {
         {[...Array(15)].map((_, i) => {
           const icons = [
             <Heart key={`heart-${i}`} className="text-red-400/20" />,
-            <Stethoscope key={`stethoscope-${i}`} className="text-cyan-500/20" />,
+            <Stethoscope
+              key={`stethoscope-${i}`}
+              className="text-cyan-500/20"
+            />,
             <Activity key={`activity-${i}`} className="text-teal-500/20" />,
-          ]
-          const randomIcon = icons[Math.floor(Math.random() * icons.length)]
+          ];
+          const randomIcon = icons[Math.floor(Math.random() * icons.length)];
 
           return (
             <motion.div
@@ -159,7 +187,7 @@ export default function AuthPage() {
             >
               {randomIcon}
             </motion.div>
-          )
+          );
         })}
       </div>
 
@@ -169,7 +197,11 @@ export default function AuthPage() {
           <div className="relative">
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+              transition={{
+                duration: 3,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "linear",
+              }}
               className="h-12 w-12 rounded-2xl bg-gradient-to-r from-cyan-400 via-blue-500 to-teal-500 flex items-center justify-center text-white font-bold mr-4 shadow-lg"
             >
               <Sparkles className="h-6 w-6" />
@@ -190,7 +222,9 @@ export default function AuthPage() {
               <button
                 className={cn(
                   "flex-1 py-4 text-center font-medium text-sm transition-colors",
-                  isLogin ? "text-cyan-600 border-b-2 border-cyan-500" : "text-gray-500 hover:text-gray-700",
+                  isLogin
+                    ? "text-cyan-600 border-b-2 border-cyan-500"
+                    : "text-gray-500 hover:text-gray-700"
                 )}
                 onClick={() => setIsLogin(true)}
               >
@@ -199,7 +233,9 @@ export default function AuthPage() {
               <button
                 className={cn(
                   "flex-1 py-4 text-center font-medium text-sm transition-colors",
-                  !isLogin ? "text-cyan-600 border-b-2 border-cyan-500" : "text-gray-500 hover:text-gray-700",
+                  !isLogin
+                    ? "text-cyan-600 border-b-2 border-cyan-500"
+                    : "text-gray-500 hover:text-gray-700"
                 )}
                 onClick={() => setIsLogin(false)}
               >
@@ -225,7 +261,10 @@ export default function AuthPage() {
                     {/* Name Field - Only for Signup */}
                     {!isLogin && (
                       <div className="space-y-2">
-                        <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                        <Label
+                          htmlFor="name"
+                          className="text-sm font-medium text-gray-700"
+                        >
                           Full Name
                         </Label>
                         <div className="relative">
@@ -237,18 +276,26 @@ export default function AuthPage() {
                             onChange={handleChange}
                             className={cn(
                               "pl-10 py-5 bg-white border-2 focus:border-cyan-400 focus:ring-cyan-400 rounded-xl",
-                              errors.name && "border-red-300 focus:border-red-400 focus:ring-red-400",
+                              errors.name &&
+                                "border-red-300 focus:border-red-400 focus:ring-red-400"
                             )}
                             placeholder="Dr. John Doe"
                           />
                         </div>
-                        {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
+                        {errors.name && (
+                          <p className="text-sm text-red-500 mt-1">
+                            {errors.name}
+                          </p>
+                        )}
                       </div>
                     )}
 
                     {/* Email Field */}
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                      <Label
+                        htmlFor="email"
+                        className="text-sm font-medium text-gray-700"
+                      >
                         Email Address
                       </Label>
                       <div className="relative">
@@ -261,17 +308,25 @@ export default function AuthPage() {
                           onChange={handleChange}
                           className={cn(
                             "pl-10 py-5 bg-white border-2 focus:border-cyan-400 focus:ring-cyan-400 rounded-xl",
-                            errors.email && "border-red-300 focus:border-red-400 focus:ring-red-400",
+                            errors.email &&
+                              "border-red-300 focus:border-red-400 focus:ring-red-400"
                           )}
                           placeholder="doctor@example.com"
                         />
                       </div>
-                      {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email}</p>}
+                      {errors.email && (
+                        <p className="text-sm text-red-500 mt-1">
+                          {errors.email}
+                        </p>
+                      )}
                     </div>
 
                     {/* Password Field */}
                     <div className="space-y-2">
-                      <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                      <Label
+                        htmlFor="password"
+                        className="text-sm font-medium text-gray-700"
+                      >
                         Password
                       </Label>
                       <div className="relative">
@@ -284,18 +339,26 @@ export default function AuthPage() {
                           onChange={handleChange}
                           className={cn(
                             "pl-10 py-5 bg-white border-2 focus:border-cyan-400 focus:ring-cyan-400 rounded-xl",
-                            errors.password && "border-red-300 focus:border-red-400 focus:ring-red-400",
+                            errors.password &&
+                              "border-red-300 focus:border-red-400 focus:ring-red-400"
                           )}
                           placeholder="••••••••"
                         />
                       </div>
-                      {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password}</p>}
+                      {errors.password && (
+                        <p className="text-sm text-red-500 mt-1">
+                          {errors.password}
+                        </p>
+                      )}
                     </div>
 
                     {/* Confirm Password Field - Only for Signup */}
                     {!isLogin && (
                       <div className="space-y-2">
-                        <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
+                        <Label
+                          htmlFor="confirmPassword"
+                          className="text-sm font-medium text-gray-700"
+                        >
                           Confirm Password
                         </Label>
                         <div className="relative">
@@ -308,13 +371,16 @@ export default function AuthPage() {
                             onChange={handleChange}
                             className={cn(
                               "pl-10 py-5 bg-white border-2 focus:border-cyan-400 focus:ring-cyan-400 rounded-xl",
-                              errors.confirmPassword && "border-red-300 focus:border-red-400 focus:ring-red-400",
+                              errors.confirmPassword &&
+                                "border-red-300 focus:border-red-400 focus:ring-red-400"
                             )}
                             placeholder="••••••••"
                           />
                         </div>
                         {errors.confirmPassword && (
-                          <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>
+                          <p className="text-sm text-red-500 mt-1">
+                            {errors.confirmPassword}
+                          </p>
                         )}
                       </div>
                     )}
@@ -322,7 +388,10 @@ export default function AuthPage() {
                     {/* Forgot Password Link - Only for Login */}
                     {isLogin && (
                       <div className="flex justify-end">
-                        <Link href="/forgot-password" className="text-sm font-medium text-cyan-600 hover:text-cyan-500">
+                        <Link
+                          href="/forgot-password"
+                          className="text-sm font-medium text-cyan-600 hover:text-cyan-500"
+                        >
                           Forgot password?
                         </Link>
                       </div>
@@ -351,7 +420,9 @@ export default function AuthPage() {
                         onClick={toggleAuthMode}
                         className="text-sm font-medium text-cyan-600 hover:text-cyan-500"
                       >
-                        {isLogin ? "Need an account? Sign up" : "Already have an account? Sign in"}
+                        {isLogin
+                          ? "Need an account? Sign up"
+                          : "Already have an account? Sign in"}
                       </button>
                     </div>
                   </form>
@@ -362,12 +433,14 @@ export default function AuthPage() {
 
           {/* Medical Disclaimer */}
           <p className="text-xs text-center text-gray-500 mt-8">
-            MediChat provides secure access to medical professionals and information.
+            MediChat provides secure access to medical professionals and
+            information.
             <br />
-            Your data is encrypted and protected in accordance with healthcare privacy standards.
+            Your data is encrypted and protected in accordance with healthcare
+            privacy standards.
           </p>
         </div>
       </main>
     </div>
-  )
+  );
 }

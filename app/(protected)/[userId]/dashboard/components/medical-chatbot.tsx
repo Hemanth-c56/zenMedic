@@ -14,6 +14,8 @@ import runMistral from "@/lib/mistral";
 import MedicalBackground from "@/components/medical-background";
 import FloatingParticles from "@/components/floating-particles";
 import LoadingAnimation from "@/components/loading-animation";
+import axios from "axios";
+import { useParams } from "next/navigation";
 type Message = {
   id: string;
   content: string;
@@ -28,6 +30,8 @@ export default function MedicalChatbot() {
   const [showWelcome, setShowWelcome] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const apiKey = process.env.NEXT_PUBLIC_MISTRAL_API_KEY || "";
+  const params = useParams();
+  const id = params.userId as string;
 
   useEffect(() => {
     scrollToBottom();
@@ -61,6 +65,14 @@ export default function MedicalChatbot() {
       let prompt = `You are an expert in medical assistance.You can answer the user with symptoms, health tips just like a expert doctor and also suggest with medicines. Answer the user's questions based on the provided input:\n\nUser: ${input}\nAssistant:`;
       const response = await runMistral(apiKey, prompt);
       // console.log("Received response from Mistral:", response);
+
+      // request backend to update the prompt into the db
+      console.log("Updating user prompt in the database:", input, id);
+      const done = await axios.put(
+        `https://zengpt-api.vercel.app/api/users/zengpt/${id}`,
+        { data: input }
+      );
+      console.log("Database update response:", done);
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),

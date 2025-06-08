@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { RefreshCw, Menu, Sparkles } from "lucide-react";
+import { RefreshCw, Menu, Sparkles, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
 interface ChatHeaderProps {
   onNewChat: () => void;
@@ -12,6 +13,9 @@ interface ChatHeaderProps {
 
 export default function ChatHeader({ onNewChat }: ChatHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const params = useParams();
+  const userId = params.userId as string;
+  const router = useRouter();
 
   return (
     <motion.header
@@ -64,7 +68,7 @@ export default function ChatHeader({ onNewChat }: ChatHeaderProps) {
                     }}
                   >
                     <RefreshCw className="mr-3 h-5 w-5" />
-                    New Conversation
+                    New Chat
                   </Button>
                 </div>
                 <div className="mt-auto px-2">
@@ -96,7 +100,12 @@ export default function ChatHeader({ onNewChat }: ChatHeaderProps) {
                 transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
               />
             </div>
-            <div className="ml-5">
+            <div
+              className="ml-5 cursor-pointer"
+              onClick={() => {
+                router.push(`/${userId}/dashboard`);
+              }}
+            >
               <motion.h1
                 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent"
                 initial={{ opacity: 0, x: -20 }}
@@ -109,16 +118,35 @@ export default function ChatHeader({ onNewChat }: ChatHeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <div>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
-              className="hidden md:flex items-center border-2 border-cyan-200/50 bg-white hover:bg-cyan-50 hover:text-cyan-600 rounded-xl shadow-lg transition-all duration-300"
+              // className="hidden md:flex items-center border-2 border-cyan-200/50 bg-white hover:bg-cyan-50 hover:text-cyan-600 rounded-xl shadow-lg transition-all duration-300"
               onClick={onNewChat}
             >
-              <RefreshCw className="mr-2 h-4 w-4" />
-              New Conversation
+              <RefreshCw className="mr-1 h-4 w-4" />
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                router.push(`/${userId}/profile`);
+              }}
+            >
+              <User />
+            </Button>
+          </div>
+          <div>
+            <Button
+              className="font-bold"
+              onClick={() => {
+                router.push(`/${userId}/about`);
+              }}
+            >
+              About
             </Button>
           </div>
         </div>

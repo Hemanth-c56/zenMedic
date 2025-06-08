@@ -1,13 +1,11 @@
-"use client"
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
+"use client";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useParams, useRouter } from "next/navigation";
 import {
   Sparkles,
   User,
   Mail,
-  Trash2,
   MessageSquare,
   Calendar,
   ArrowLeft,
@@ -15,115 +13,103 @@ import {
   Heart,
   Stethoscope,
   Activity,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Avatar } from "@/components/ui/avatar"
+  LogOut,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Avatar } from "@/components/ui/avatar";
+import axios from "axios";
 
 // Mock user data - replace with actual user data from your auth system
-const mockUser = {
-  id: "user123",
-  name: "Dr. Sarah Johnson",
-  email: "sarah.johnson@example.com",
-  joinDate: "2024-01-15",
-  totalChats: 24,
-}
-
-// Mock chat history - replace with actual chat data from your backend
-const mockChatHistory = [
-  {
-    id: "chat1",
-    message: "I've been experiencing headaches for the past few days. What could be the cause?",
-    timestamp: "2024-01-20T10:30:00Z",
-    date: "Today",
-  },
-  {
-    id: "chat2",
-    message: "What are the symptoms of high blood pressure?",
-    timestamp: "2024-01-19T15:45:00Z",
-    date: "Yesterday",
-  },
-  {
-    id: "chat3",
-    message: "Can you explain the difference between Type 1 and Type 2 diabetes?",
-    timestamp: "2024-01-18T09:20:00Z",
-    date: "2 days ago",
-  },
-  {
-    id: "chat4",
-    message: "I have a persistent cough. Should I be concerned?",
-    timestamp: "2024-01-17T14:15:00Z",
-    date: "3 days ago",
-  },
-  {
-    id: "chat5",
-    message: "What are the recommended daily vitamins for adults?",
-    timestamp: "2024-01-16T11:30:00Z",
-    date: "4 days ago",
-  },
-  {
-    id: "chat6",
-    message: "How can I improve my sleep quality naturally?",
-    timestamp: "2024-01-15T16:45:00Z",
-    date: "5 days ago",
-  },
-]
+let mockUser = {
+  name: "Getting...",
+  email: "getting...",
+  totalChats: 0,
+};
 
 export default function ProfilePage() {
-  const [showDeleteChatsModal, setShowDeleteChatsModal] = useState(false)
-  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [chatHistory, setChatHistory] = useState(mockChatHistory)
-  const router = useRouter()
+  const [showDeleteChatsModal, setShowDeleteChatsModal] = useState(false);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
+  const params = useParams();
+  const router = useRouter();
+  const userId = params.userId as string;
+  let id = userId;
 
-  const handleDeleteChats = async () => {
-    setIsLoading(true)
-    try {
-      // Here you would make an API call to delete all user chats
-      console.log("Deleting all user chats...")
+  useEffect(() => {
+    async function fetchUserHistory() {
+      try {
+        const res = await axios.get(
+          `https://zengpt-api.vercel.app/api/users/zengpt/${id}`
+        );
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+        const userData = await axios.get(
+          `https://zengpt-api.vercel.app/api/users/zengpt/user/details/${id}`
+        );
 
-      // Clear chat history
-      setChatHistory([])
-      setShowDeleteChatsModal(false)
-
-      console.log("All chats deleted successfully")
-    } catch (error) {
-      console.error("Error deleting chats:", error)
-    } finally {
-      setIsLoading(false)
+        setChatHistory(res.data.history);
+        mockUser = {
+          name: userData.data.userDetails.name,
+          email: userData.data.userDetails.email,
+          totalChats: res.data.history.length,
+        };
+      } catch (error) {
+        console.error("Error fetching user history:", error);
+      }
     }
-  }
+    fetchUserHistory();
+  }, []);
+
+  // const handleDeleteChats = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     // Here you would make an API call to delete all user chats
+  //     console.log("Deleting all user chats...");
+
+  //     // Simulate API call
+  //     await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  //     // Clear chat history
+  //     setChatHistory([]);
+  //     setShowDeleteChatsModal(false);
+
+  //     console.log("All chats deleted successfully");
+  //   } catch (error) {
+  //     console.error("Error deleting chats:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleDeleteAccount = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       // Here you would make an API call to delete the user account
-      console.log("Deleting user account...")
+      console.log("Deleting user account...");
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      await axios.delete(
+        `https://zengpt-api.vercel.app/api/users/zengpt/delete/account/${userId}`
+      );
 
-      console.log("Account deleted successfully")
+      console.log("Account deleted successfully");
 
       // Redirect to login page or home page
-      router.push("/auth")
+      router.push("/auth");
     } catch (error) {
-      console.error("Error deleting account:", error)
+      console.error("Error deleting account:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
+    const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
-    })
-  }
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-cyan-50 via-blue-50 to-teal-50 relative overflow-hidden">
@@ -132,10 +118,13 @@ export default function ProfilePage() {
         {[...Array(10)].map((_, i) => {
           const icons = [
             <Heart key={`heart-${i}`} className="text-red-400/10" />,
-            <Stethoscope key={`stethoscope-${i}`} className="text-cyan-500/10" />,
+            <Stethoscope
+              key={`stethoscope-${i}`}
+              className="text-cyan-500/10"
+            />,
             <Activity key={`activity-${i}`} className="text-teal-500/10" />,
-          ]
-          const randomIcon = icons[Math.floor(Math.random() * icons.length)]
+          ];
+          const randomIcon = icons[Math.floor(Math.random() * icons.length)];
 
           return (
             <motion.div
@@ -157,21 +146,29 @@ export default function ProfilePage() {
             >
               {randomIcon}
             </motion.div>
-          )
+          );
         })}
       </div>
 
       {/* Header */}
       <header className="relative z-10 w-full py-6 px-4 flex items-center justify-between">
         <div className="flex items-center">
-          <Link href="/" className="flex items-center mr-6">
+          <Button
+            variant="ghost"
+            onClick={() => router.back()}
+            className="mr-4"
+          >
             <ArrowLeft className="h-6 w-6 text-gray-600 hover:text-cyan-600 transition-colors" />
-          </Link>
+          </Button>
           <div className="flex items-center">
             <div className="relative">
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "linear",
+                }}
                 className="h-10 w-10 rounded-2xl bg-gradient-to-r from-cyan-400 via-blue-500 to-teal-500 flex items-center justify-center text-white font-bold mr-3 shadow-lg"
               >
                 <Sparkles className="h-5 w-5" />
@@ -212,14 +209,12 @@ export default function ProfilePage() {
 
             {/* User Details */}
             <div className="flex-1 text-center md:text-left">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">{mockUser.name}</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                {mockUser.name}
+              </h2>
               <div className="flex items-center justify-center md:justify-start gap-2 text-gray-600 mb-4">
                 <Mail className="h-4 w-4" />
                 <span>{mockUser.email}</span>
-              </div>
-              <div className="flex items-center justify-center md:justify-start gap-2 text-gray-500 text-sm mb-4">
-                <Calendar className="h-4 w-4" />
-                <span>Member since {formatDate(mockUser.joinDate)}</span>
               </div>
               <div className="flex items-center justify-center md:justify-start gap-2 text-cyan-600 font-medium">
                 <MessageSquare className="h-4 w-4" />
@@ -235,8 +230,8 @@ export default function ProfilePage() {
               variant="outline"
               className="flex-1 py-3 border-2 border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300 rounded-xl transition-all duration-300"
             >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete All Chats
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
             </Button>
             <Button
               onClick={() => setShowDeleteAccountModal(true)}
@@ -265,23 +260,24 @@ export default function ProfilePage() {
             <div className="text-center py-12">
               <MessageSquare className="h-16 w-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500 text-lg">No chat history found</p>
-              <p className="text-gray-400 text-sm mt-2">Start a conversation to see your messages here</p>
+              <p className="text-gray-400 text-sm mt-2">
+                Start a conversation to see your messages here
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
               {chatHistory.map((chat, index) => (
                 <motion.div
-                  key={chat.id}
+                  key={index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                   className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-4 border border-blue-100 hover:shadow-md transition-all duration-300"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <p className="text-gray-800 text-sm leading-relaxed">{chat.message}</p>
-                    </div>
-                    <div className="text-xs text-gray-500 whitespace-nowrap">{chat.date}</div>
+                  <div className="flex-1">
+                    <p className="text-gray-800 text-sm leading-relaxed">
+                      {chat}
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -309,11 +305,13 @@ export default function ProfilePage() {
             >
               <div className="text-center">
                 <div className="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Trash2 className="h-6 w-6 text-orange-600" />
+                  <LogOut className="h-6 w-6 text-orange-600" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Delete All Chats</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  Sign Out
+                </h3>
                 <p className="text-gray-600 mb-6">
-                  Are you sure you want to delete all your chat history? This action cannot be undone.
+                  Are you sure you want to Sign Out?
                 </p>
                 <div className="flex gap-3">
                   <Button
@@ -325,14 +323,17 @@ export default function ProfilePage() {
                     Cancel
                   </Button>
                   <Button
-                    onClick={handleDeleteChats}
+                    // onClick={handleDeleteChats}
+                    onClick={() => {
+                      router.push("/auth");
+                    }}
                     className="flex-1 bg-orange-600 hover:bg-orange-700"
                     disabled={isLoading}
                   >
                     {isLoading ? (
                       <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
-                      "Delete Chats"
+                      "Sign Out"
                     )}
                   </Button>
                 </div>
@@ -363,10 +364,12 @@ export default function ProfilePage() {
                 <div className="h-12 w-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <AlertTriangle className="h-6 w-6 text-red-600" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Delete Account</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  Delete Account
+                </h3>
                 <p className="text-gray-600 mb-6">
-                  Are you sure you want to permanently delete your account? This will remove all your data and cannot be
-                  undone.
+                  Are you sure you want to permanently delete your account? This
+                  will remove all your data and cannot be undone.
                 </p>
                 <div className="flex gap-3">
                   <Button
@@ -395,5 +398,5 @@ export default function ProfilePage() {
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }
