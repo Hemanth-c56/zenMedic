@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-import run from "../lib/mistral";
 import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Send, Plus } from "lucide-react";
@@ -11,10 +10,10 @@ import { cn } from "@/lib/utils";
 import ChatHeader from "./chat-header";
 import ChatMessage from "./chat-message";
 import WelcomeScreen from "./welcome-screen";
-import MedicalBackground from "./medical-background";
-import FloatingParticles from "./floating-particles";
-import LoadingAnimation from "./loading-animation";
-
+import runMistral from "@/lib/mistral";
+import MedicalBackground from "@/components/medical-background";
+import FloatingParticles from "@/components/floating-particles";
+import LoadingAnimation from "@/components/loading-animation";
 type Message = {
   id: string;
   content: string;
@@ -60,7 +59,7 @@ export default function MedicalChatbot() {
     try {
       // console.log("Sending message to Mistral:", input, apiKey);
       let prompt = `You are an expert in medical assistance.You can answer the user with symptoms, health tips just like a expert doctor and also suggest with medicines. Answer the user's questions based on the provided input:\n\nUser: ${input}\nAssistant:`;
-      const response = await run(apiKey, prompt);
+      const response = await runMistral(apiKey, prompt);
       // console.log("Received response from Mistral:", response);
 
       const assistantMessage: Message = {

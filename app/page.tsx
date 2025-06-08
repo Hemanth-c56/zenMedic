@@ -1,9 +1,5 @@
-import MedicalChatbot from "@/components/medical-chatbot";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col">
-      <MedicalChatbot />
-    </main>
-  );
+  redirect("/auth");
 }

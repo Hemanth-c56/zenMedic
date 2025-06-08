@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MediChat - Your AI Medical Assistant",
+  title: "ZenMedic - Your AI Medical Assistant",
   description:
     "Get instant answers to your medical questions with our AI-powered medical chatbot.",
   icons: {

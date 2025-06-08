@@ -53,7 +53,7 @@ export default function ChatHeader({ onNewChat }: ChatHeaderProps) {
                     >
                       <Sparkles className="h-8 w-8" />
                     </motion.div>
-                    MediChat
+                    ZenMedic
                   </motion.h2>
                   <Button
                     variant="outline"
@@ -69,8 +69,8 @@ export default function ChatHeader({ onNewChat }: ChatHeaderProps) {
                 </div>
                 <div className="mt-auto px-2">
                   <p className="text-sm text-gray-600 leading-relaxed">
-                    MediChat provides information for educational purposes only.
-                    Always consult healthcare professionals for medical advice.
+                    Expert Medical Advises & Medical information provided. If
+                    serious symptoms consult a healthcare professional.
                   </p>
                 </div>
               </div>
